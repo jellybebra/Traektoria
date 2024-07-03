@@ -28,9 +28,20 @@ function App() {
     setData(updatedData);
   }
 
-  // Используя данные отрисовать компоненты объектов в виде карточек с полями.
-
-  // Добавить возможность редактирования и удаления карточек на фронтенд части (изменение названия марки, модели и стоимости).
+  function handleEditSave(vehicleId) {
+    const updatedData = [...data];
+    const vehicleIndex = updatedData.findIndex(v => v.id === vehicleId);
+    if (vehicleIndex !== -1) {
+      updatedData[vehicleIndex] = {
+        ...updatedData[vehicleIndex],
+        name: document.getElementById(`edit-name-${vehicleId}`).value,
+        model: document.getElementById(`edit-model-${vehicleId}`).value,
+        price: parseInt(document.getElementById(`edit-price-${vehicleId}`).value, 10),
+      };
+      setData(updatedData);
+      setEditingVehicleId(null);
+    }
+  }
 
   return (
     <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
@@ -61,11 +72,11 @@ function App() {
                 </> :
                 <>
                   <div className="card-content">
-                    <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
                       <h3>{vehicle.name} {vehicle.model}</h3>
-                      <>{vehicle.year}, {vehicle.color}</>
+                      <h3>{formatMoney(vehicle.price)} $</h3>
                     </div>
-                    <h3>{formatMoney(vehicle.price)} $</h3>
+                    <>{vehicle.year}, {vehicle.color}</>
                   </div>
                   <div className="card-actions">
                     <button onClick={() => setEditingVehicleId(vehicle.id)}>
